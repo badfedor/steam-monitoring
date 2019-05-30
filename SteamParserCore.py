@@ -23,34 +23,51 @@ for Player in SteamApiData["response"]["players"]:
     PlayerStatus = int(Player["personastate"])
     if PlayerStatus == 0:
         print('Offline')
+        PlayserStatusText = 'Offline'
     elif PlayerStatus == 1:
         print('Online')
+        PlayserStatusText = 'Online'
     elif PlayerStatus == 2:
         print('Busy')
+        PlayserStatusText = 'Busy'
     elif PlayerStatus == 3:
         print('Away')
+        PlayserStatusText = 'Away'
     elif PlayerStatus == 4:
         print('Snooze')
+        PlayserStatusText = 'Snooze'
     elif PlayerStatus == 5:
         print('looking to trade')
+        PlayserStatusText = 'looking to trade'
     elif PlayerStatus == 6:
         print('looking to play')
+        PlayserStatusText = 'looking to play'
     else:
         print('Error')
+        PlayserStatusText = 'Error'
 
     try:
         print(Player["gameid"], Player["gameextrainfo"])
+        PlayerGameId = Player["gameid"]
+        PlayerGameExtraInfo = Player["gameextrainfo"]
     except:
         print("No data about game")
+        PlayerGameId = ' '
+        PlayerGameExtraInfo = ' '
 
     try:
         print(Player["gameserverip"])
+        PlayerGameServerIp = Player["gameserverip"]
     except:
         print("No data about server user currently playing")
+        PlayerGameServerIp = ' '
 
 print(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 
-ExcelTitle = ['year', 'month', 'day', 'hour', 'min', 'steamid', 'name', 'status', 'gameid', 'gameinfo', 'gameserverip']
+ExcelTitle = ['year', 'month', 'day', 'hour', 'min', 'steamid', 'name', 'statuscode','status', 'gameid', 'gameinfo', 'gameserverip']
+ExcelStatsRow = [datetime.now().strftime('%Y'), datetime.now().strftime('%m'), datetime.now().strftime('%d'), 
+                datetime.now().strftime('%H'), datetime.now().strftime('%M'),
+                Player["steamid"], Player["personaname"], Player["personastate"], PlayserStatusText, PlayerGameId, PlayerGameExtraInfo, PlayerGameServerIp]
 
 def createExcelFile():
     cr_Wb = Workbook()
@@ -58,8 +75,16 @@ def createExcelFile():
     cr_Ws.append(ExcelTitle)
     cr_Wb.save(str(SteamApiUserId)+'.xlsx')
 
-try:
+def appendExcelStatsRow():
     curExcel = openpyxl.load_workbook(str(SteamApiUserId)+'.xlsx')
+    curExcelWs = curExcel.active
+    curExcelWs.append(ExcelStatsRow)
+    curExcel.save(str(SteamApiUserId)+'.xlsx')
+
+try:
+    appendExcelStatsRow()
 except:
     createExcelFile()
-    print('ez')
+    print('New user, created a new excel file')
+    appendExcelStatsRow()
+
