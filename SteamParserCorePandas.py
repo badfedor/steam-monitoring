@@ -2,12 +2,12 @@ import json, urllib3, threading
 import pandas as pd
 from datetime import datetime
 
-STEAM_API_KEY = '6A3A55A3EF17619FF5E44626B13D2D21'
+STEAM_API_KEY = 'YOUR_STEAM_KEY'
 REQUEST_DELAY = 60
 
 SteamApi = urllib3.PoolManager()
 
-SteamPlayersToMonitor = ['76561198812315799', '76561198319920787', '76561198280990379']
+SteamPlayersToMonitor = ['STEAM_PLAYER_IDS']
 
 def GetPlayersInfo():
 
