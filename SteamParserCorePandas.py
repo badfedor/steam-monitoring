@@ -2,7 +2,7 @@ import json, urllib3, threading
 import pandas as pd
 from datetime import datetime
 
-STEAM_API_KEY = 'YOUR_STEAM_KEY'
+STEAM_API_KEY = 'YOUR_STEAM_API_KEY'
 REQUEST_DELAY = 60
 
 SteamApi = urllib3.PoolManager()
@@ -20,7 +20,6 @@ def GetPlayersInfo():
         SteamApiData = SteamApi.request('GET', SteamApiUrl)
         SteamApiData = SteamApiData.data.decode('utf-8')
 
-        #SteamApiData = json.dumps(SteamApiData)
         SteamApiData = json.loads(SteamApiData)
 
         for Player in SteamApiData["response"]["players"]:
@@ -65,11 +64,11 @@ def GetPlayersInfo():
         ExcelStatsRow = pd.DataFrame([ExcelStatsRow])
 
         def createExcelFile():
-            ExcelTitle.to_excel(str(SteamApiUserId)+'.xlsx', index=False, header=False)
+            ExcelTitle.to_excel(str(datetime.now().strftime('%Y_%m_%d_'))+str(SteamApiUserId)+'.xlsx', index=False, header=False)
         def appendExcelStatsRow():
-            cur_ExFile = pd.read_excel(str(SteamApiUserId)+'.xlsx', index_col=None, header=None)
+            cur_ExFile = pd.read_excel(str(datetime.now().strftime('%Y_%m_%d_'))+str(SteamApiUserId)+'.xlsx', index_col=None, header=None)
             cur_ExFile = cur_ExFile.append(ExcelStatsRow) 
-            cur_ExFile.to_excel(str(SteamApiUserId)+'.xlsx', index=False, header=False)
+            cur_ExFile.to_excel(str(datetime.now().strftime('%Y_%m_%d_'))+str(SteamApiUserId)+'.xlsx', index=False, header=False)
 
         try:
             appendExcelStatsRow()
